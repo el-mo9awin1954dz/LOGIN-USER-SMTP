@@ -1,3 +1,15 @@
+import-module ActiveDirectory
+
+function whoAmi {
+    param(
+        [string]$Message
+    )
+
+    Write-Host "Message: $Message"
+}
+
+whoAmi "DZLAB ELMO9AWIM =============== SMTP - LOGIN USER SYS ENUM  ================= $(get-date -f MM-dd)"
+whoAmi -message "[START] = HACKING ITS FUN @DZHACKTEAM"
 
 
 function Log-Message-alert
@@ -14,7 +26,8 @@ function Log-Message-alert
     
 }
 
- 
+
+
 
 $username = "attacker";
 $password = "password";
